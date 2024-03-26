@@ -2,13 +2,20 @@ from django.db import models
 
 from location.models import Location
 
+from .validators import validate_truck_number
+
 
 class Truck(models.Model):
     """
     Модель для хранения информации о машине.
     """
 
-    number = models.CharField(max_length=5, unique=True, verbose_name='Номер машины')
+    number = models.CharField(
+        max_length=5,
+        unique=True,
+        validators=[validate_truck_number],
+        verbose_name='Номер машины'
+    )
 
     current_location = models.ForeignKey(
         to=Location,
@@ -16,7 +23,7 @@ class Truck(models.Model):
         verbose_name='Текущая локация'
     )
 
-    capacity = models.IntegerField(verbose_name='Грузоподъемность')
+    capacity = models.PositiveIntegerField(verbose_name='Грузоподъемность')
 
     def __str__(self):
         """
