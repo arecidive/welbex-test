@@ -1,3 +1,4 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 from location.models import Location
@@ -23,7 +24,13 @@ class Truck(models.Model):
         verbose_name='Текущая локация'
     )
 
-    capacity = models.PositiveIntegerField(verbose_name='Грузоподъемность')
+    capacity = models.PositiveIntegerField(
+        validators=[
+            MinValueValidator(1, message='Грузоподъемность должна быть не меньше 1!'),
+            MaxValueValidator(1000, message='Грузоподъемность должна быть не больше 1000!')
+        ],
+        verbose_name='Грузоподъемность'
+    )
 
     def __str__(self):
         """
