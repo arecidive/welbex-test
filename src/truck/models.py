@@ -16,7 +16,7 @@ class Truck(models.Model):
         verbose_name='Текущая локация'
     )
 
-    capacity = models.IntegerField(verbose_name='Грузоподъемность')
+    capacity = models.PositiveIntegerField(verbose_name='Грузоподъемность')
 
     def __str__(self):
         """
