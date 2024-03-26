@@ -81,13 +81,13 @@ class CargoListSerializer(CargoBaseSerializer):
         :param obj: объект модели 'Cargo'.
         """
 
-        trucks = Truck.objects.all()
-        location2 = (obj.pick_up_location.latitude, obj.pick_up_location.longitude)
+        trucks = Truck.objects.only('number', 'current_location').select_related('current_location')
+        location_cargo = (obj.pick_up_location.latitude, obj.pick_up_location.longitude)
 
         counter = 0
         for truck in trucks:
-            location1 = (truck.current_location.latitude, truck.current_location.longitude)
-            distance = geodesic(location2, location1).miles
+            location_truck = (truck.current_location.latitude, truck.current_location.longitude)
+            distance = geodesic(location_truck, location_cargo).miles
             if distance <= 450:
                 counter += 1
 
@@ -118,13 +118,13 @@ class CargoRetrieveSerializer(CargoBaseSerializer):
         :param obj: объект модели 'Cargo'.
         """
 
-        trucks = Truck.objects.all()
-        location2 = (obj.pick_up_location.latitude, obj.pick_up_location.longitude)
+        trucks = Truck.objects.only('number', 'current_location').select_related('current_location')
+        location_cargo = (obj.pick_up_location.latitude, obj.pick_up_location.longitude)
 
         filter_trucks = []
         for truck in trucks:
-            location1 = (truck.current_location.latitude, truck.current_location.longitude)
-            distance = geodesic(location2, location1).miles
+            location_truck = (truck.current_location.latitude, truck.current_location.longitude)
+            distance = geodesic(location_truck, location_cargo).miles
             if distance <= 450:
                 filter_trucks.append({'truck_number': truck.number, 'distance': distance})
 

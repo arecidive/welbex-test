@@ -10,7 +10,17 @@ class CargoViewSet(ModelViewSet):
     Класс является ViewSet для управления грузами.
     """
 
-    queryset = Cargo.objects.all()
+    def get_queryset(self):
+        """
+        Данный метод возвращает запрос, возвращающий список устройств, принадлежащих
+        текущему пользователю.
+
+        :returns: запрос, возвращающий список устройств.
+        """
+
+        return Cargo.objects.only(
+            'pick_up_location', 'delivery_location', 'weight', 'description'
+        ).select_related('pick_up_location', 'delivery_location')
 
     def get_serializer_class(self) -> ModelSerializer:
         """
