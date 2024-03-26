@@ -42,5 +42,12 @@ class Truck(models.Model):
         return f'{self.number}'
 
     class Meta:
+        """
+        Класс для определения метаданных класса сериализатора.
+        """
+
         verbose_name = 'Машина'
         verbose_name_plural = 'Машины'
+        indexes = [
+            models.Index(fields=['number']),
+        ]
