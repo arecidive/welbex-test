@@ -1,3 +1,4 @@
+from django.db.models import QuerySet
 from rest_framework.serializers import ModelSerializer
 from rest_framework.viewsets import ModelViewSet
 
@@ -10,7 +11,7 @@ class CargoViewSet(ModelViewSet):
     Класс является ViewSet для управления грузами.
     """
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         """
         Данный метод возвращает запрос, возвращающий список устройств, принадлежащих
         текущему пользователю.
