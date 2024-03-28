@@ -1,3 +1,6 @@
+from django.conf import settings
+from django.core.cache import cache
+from django.db.models import QuerySet
 from geopy.distance import geodesic
 from rest_framework import serializers
 
@@ -5,6 +8,22 @@ from location.models import Location
 from truck.models import Truck
 
 from .models import Cargo
+
+
+def get_trucks_cache() -> QuerySet:
+    """
+    Функция получает кэш грузовиков из хранилища кэша. Если кэш грузовиков не существует, извлекает
+    грузовики из базы данных, выбирая только номера грузовиков и текущее местоположение, и сохраняет их
+    в кэше на 60 секунд.
+
+    :returns: кэш грузовиков, содержащий информацию о номерах грузовиков и их текущем местоположении.
+    """
+
+    trucks_cache = cache.get(settings.TRUCKS_CACHE_NAME)
+    if trucks_cache is None:
+        trucks_cache = Truck.objects.only('number', 'current_location').select_related('current_location')
+        cache.set(settings.TRUCKS_CACHE_NAME, trucks_cache, 60)
+    return trucks_cache
 
 
 class CargoBaseSerializer(serializers.ModelSerializer):
@@ -81,7 +100,7 @@ class CargoListSerializer(CargoBaseSerializer):
         :param obj: объект модели 'Cargo'.
         """
 
-        trucks = Truck.objects.only('number', 'current_location').select_related('current_location')
+        trucks = get_trucks_cache()
         location_cargo = (obj.pick_up_location.latitude, obj.pick_up_location.longitude)
 
         counter = 0
@@ -118,7 +137,7 @@ class CargoRetrieveSerializer(CargoBaseSerializer):
         :param obj: объект модели 'Cargo'.
         """
 
-        trucks = Truck.objects.only('number', 'current_location').select_related('current_location')
+        trucks = get_trucks_cache()
         location_cargo = (obj.pick_up_location.latitude, obj.pick_up_location.longitude)
 
         filter_trucks = []

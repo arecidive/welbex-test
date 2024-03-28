@@ -3,6 +3,7 @@ from rest_framework.serializers import ModelSerializer
 from rest_framework.viewsets import ModelViewSet
 
 from . import serializers
+from .filters import CargoFilterBackend
 from .models import Cargo
 
 
@@ -10,6 +11,8 @@ class CargoViewSet(ModelViewSet):
     """
     Класс является ViewSet для управления грузами.
     """
+
+    filter_backends = [CargoFilterBackend]
 
     def get_queryset(self) -> QuerySet:
         """
