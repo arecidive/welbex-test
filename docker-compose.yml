@@ -3,6 +3,7 @@ version: '3.8'
 services:
   web-app:
     build:
+      context: .
       dockerfile: src/Dockerfile
     ports:
       - "8000:8000"
