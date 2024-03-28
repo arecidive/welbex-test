@@ -110,6 +110,16 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = ['*']
 CSRF_COOKIE_SECURE = False
 
+# Cache Settings
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://redis:6379/1',
+    }
+}
+
+TRUCKS_CACHE_NAME = 'trucks_cache'
+
 STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
