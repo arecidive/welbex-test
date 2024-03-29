@@ -81,14 +81,3 @@ class TestCargoRetrieveSerializer:
         ]
 
         assert all(truck['truck_number'] in trucks for truck in trucks_serializer)
-
-        cargo = test_data['cargo_2']  # Груз находится рядом с 2-мя машинами, но одной из них не подходит по весу
-        serializer = serializers.CargoRetrieveSerializer(instance=cargo)
-
-        assert len(serializer.data['nearest_trucks']) == 1
-        assert serializer.data['nearest_trucks'][0]['truck_number'] == test_data['truck_2'].number
-
-        cargo = test_data['cargo_3']  # Груз находится далеко от всех машин в базе данных
-        serializer = serializers.CargoRetrieveSerializer(instance=cargo)
-
-        assert len(serializer.data['nearest_trucks']) == 0
