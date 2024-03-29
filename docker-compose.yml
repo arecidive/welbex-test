@@ -35,5 +35,35 @@ services:
     image: redis:7.0.5-alpine
     hostname: redis
 
+  beat:
+    build:
+      context: .
+      dockerfile: src/Dockerfile
+    entrypoint: celery
+    command: -A src.celery.app beat -l INFO
+    volumes:
+      - ./src:/src
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - database
+
+  worker:
+    build:
+      context: .
+      dockerfile: src/Dockerfile
+    entrypoint: celery
+    command: -A src.celery.app worker --loglevel=INFO
+    volumes:
+      - ./src:/src
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - database
+
 volumes:
   pg_data:
