@@ -107,7 +107,7 @@ class CargoListSerializer(CargoBaseSerializer):
         for truck in trucks:
             location_truck = (truck.current_location.latitude, truck.current_location.longitude)
             distance = geodesic(location_truck, location_cargo).miles
-            if distance <= 450:
+            if distance <= 450 and obj.weight <= truck.capacity:
                 counter += 1
 
         return counter
@@ -144,7 +144,7 @@ class CargoRetrieveSerializer(CargoBaseSerializer):
         for truck in trucks:
             location_truck = (truck.current_location.latitude, truck.current_location.longitude)
             distance = geodesic(location_truck, location_cargo).miles
-            if distance <= 450:
+            if distance <= 450 and obj.weight <= truck.capacity:
                 filter_trucks.append({'truck_number': truck.number, 'distance': distance})
 
         return filter_trucks
