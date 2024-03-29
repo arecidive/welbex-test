@@ -40,12 +40,12 @@ class CargoFilterBackend(filters.BaseFilterBackend):
                 for cargo in queryset:
                     cargo_location = (cargo.pick_up_location.latitude, cargo.pick_up_location.longitude)
                     distance = geodesic(truck_location, cargo_location).miles
-                    if distance <= 450:
+                    if distance <= 450 and cargo.weight <= truck.capacity:
                         filtered_cargos.append(cargo)
 
                 return filtered_cargos
 
             except Truck.DoesNotExist:
-                return queryset
+                return []
 
         return queryset
