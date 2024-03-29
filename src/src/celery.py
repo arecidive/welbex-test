@@ -9,3 +9,10 @@ app = Celery('src')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
 app.autodiscover_tasks()
+
+app.conf.beat_schedule = {
+    'update_truck_locations': {
+        'task': 'truck.tasks.update_truck_locations',
+        'schedule': 180.0,
+    },
+}
